@@ -18,8 +18,59 @@ NOTES: Don't create new string.
 */
 
 #include <stdio.h>
+#include <math.h>
+void swap1(char *a, char *b)
+{
+	char temp = *a;
+	*a = *b;
+	*b = temp;
+}
 
+void reverseString1(char *str, int l, int h)
+{
+	int s = l;
+	int e = h;
+	while (s<e)
+	{
+		swap1(str + s, str + e);
+		s++;
+		e--;
+	}
+}
 
-void number_to_str(float number, char *str,int afterdecimal){
-	
+int inttostr1(int num, char* str, int afterdecimal){
+	int i = 0, temp = num;
+	if (temp < 0){
+		temp = -num;
+	}
+	while (temp){
+		str[i] = (temp % 10) + '0';
+		i++;
+		temp = temp / 10;
+	}
+	if (num < 0)
+		str[i++] = '-';
+	reverseString1(str, 0,i-1);
+	str[i] = '\0';
+	return i;
+}
+
+int power(int num, int pow){
+	int res = 1;
+	for (int i = 0; i < pow; i++)
+		res = res * num;
+	return res;
+}
+
+void number_to_str(float number, char *str, int afterdecimal){
+	float fl = number - (float)((int)number);
+	int i = inttostr1(int(number), str, afterdecimal);
+	if (afterdecimal != 0)
+	{
+		str[i] = '.';
+		if (fl < 0)
+			fl = -fl;
+		fl = fl * power(10,afterdecimal);
+		inttostr1((int)fl, str + i + 1, afterdecimal);
+	}
 }
