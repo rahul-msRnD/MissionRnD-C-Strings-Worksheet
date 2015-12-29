@@ -19,45 +19,81 @@ NOTES: If there are no common words return NULL.
 bool strcmpr(char *str1, char *str2)
 {
 	if (!str1 || !str2) return false;
-	while (*str1 && *str2) {
-		if (*str1 != *str2) {
+	while (*str1 && *str2) 
+	{
+		if (*str1 != *str2) 
 			return false;
-		}
 		str1++;
 		str2++;
 	}
 	return true;
 }
-char ** commonWords(char *str1, char *str2) 
-{
-	if (!str1 || !str2) return NULL;
-	char *str, temp[10][10];
-	int i = 0, j, k = 0, p = 0;
-	char **r = (char**)malloc(31 * sizeof(char*));
-	for (i = 0; i < 31; i++)
-		r[i] = (char*)malloc(31 * sizeof(char));
-	i = 0;
-	if (strlen(str1) > strlen(str2))
+
+
+int noOfWords(char *str){
+
+	int i = 0, c = 0;
+	while (str[i] != '\0')
 	{
-		while (str2[i] != '\0')
-		{
-			if (str2[i] != ' ')
-			{
-				j = 0;
-				while (str2[i] != ' ' && str2[i] != '\0')
-				{
-					temp[p][j] = str2[i];
-					j++;
-					i++;
-				}
-				temp[p][j] = '\0';
-				str = strstr(str1, temp[p]);
-				if (strcmpr(str, temp[p]))
-					r[k++] = temp[p++];
-			}
-			i++;
-		}
+		if (str[i] == ' ')
+			c += 1;
+		i++;
 	}
-	if (k == 0) return NULL;
-	return r;
+	if (c == i)
+		return 0;
+	return c + 1;
 }
+
+void copy(char *src, char *dest)
+{
+	int i = 0;
+	for (i; src[i] != '\0'; i++)
+		dest[i] = src[i];
+	dest[i] = '\0';
+}
+
+char ** commonWords(char *str1, char *str2) {
+
+	if (str1 == 0 || str2 == 0)
+		return NULL;
+	char *word;
+	char **words2;
+	int n1, n2;
+	n1 = noOfWords(str1);
+	n2 = noOfWords(str2);
+	if (n1 == 0 || n2 == 0)
+		return NULL;
+	word = (char*)malloc(31 * sizeof(char));
+	words2 = (char**)malloc(n1* sizeof(char*));
+	int i, j = 0, k = 0;
+	int commonWordsCount = 0;
+	for (i = 0; i < n1; i++)
+		words2[i] = (char*)malloc(31 * sizeof(char));
+	for (i = 0, j = 0; str1[i] != '\0' && j<n1; i++)
+	{
+		if (str1[i] != ' ')
+		{
+			word[k] = str1[i];
+			k++;
+		}
+		else if (str1[i] == ' ')
+		{
+			word[k] = '\0';
+			k = 0;
+			char* str;
+			str = strstr(str2, word);
+			if (strcmpr(str, word))
+			{
+				copy(word, words2[j]);
+				j++;
+				commonWordsCount++;
+			}
+		}
+
+	}
+	if (commonWordsCount > 0)
+		return words2;
+	else
+		return NULL;
+}
+
